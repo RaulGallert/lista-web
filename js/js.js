@@ -1,12 +1,11 @@
-var count = 1;
-function setColor(prioridade, color) {
-    var property = document.getElementById(prioridade);
-    if (count == 0) {
-        property.style.backgroundColor = "#FFFFFF"
-        count = 1;        
+const cor = ["red","yellow","#10a4e3"]
+const pr = ["Alta","Media","Baixa"]
+let cont = 1
+function mudar(){
+    if(cont > 2){
+        cont = 0
     }
-    else {
-        property.style.backgroundColor = "#7FFF00"
-        count = 0;
-    }
+    document.getElementById("alt").style.backgroundColor = cor[cont];
+    document.getElementById("alt").textContent = pr[cont]
+    cont++
 }

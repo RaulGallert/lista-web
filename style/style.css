@@ -1,6 +1,6 @@
 .btn-grupo button {
-    background-color: #006eff; 
-    border: 1px solid rgb(0, 25, 136);
+    background-color: #15b400; 
+    border: 1px solid green;
     color: white; 
     padding: 10px 24px;
     cursor: pointer; 
@@ -8,7 +8,7 @@
 
     position: relative;
     left: 95vh;
-    bottom: 10vh;
+    bottom: 8vh;
 }
 
 .btn-grupo button:not(:last-child) {
@@ -21,21 +21,24 @@
   display: table;
 }
 
-.btn-grupo button:hover {
-  background-color: #2e8d91;
+button:not(.alt):hover{
+  background-color: #407900;
 }
 
 .add{
-    background-color: #035e00; 
+    background-color: #15b400; 
     border: 1px solid green;
     color: white; 
     padding: 10px 24px;
     cursor: pointer; 
 }
 
-.add button:hover {
-    background-color: #777777;
-    color: b;
+.alt{
+    border: 1px solid black;
+    padding: 10px 37px;
+    text-size-adjust: fixed;
+    background-color: red;
+    
 }
 
 img{
@@ -69,8 +72,8 @@ body{
 
 h1{
     position: relative;
-    right: 31vh;
-    bottom: 1vh;
+    right: 27vh;
+    bottom: 1.5vh;
 }
 
 div{
@@ -78,7 +81,10 @@ div{
     bottom: 8vh;
 }
 
-
+div.at{
+    position: relative;
+    bottom: 7.5vh;
+}
 
 
 
