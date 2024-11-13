@@ -1,0 +1,90 @@
+.btn-grupo button {
+    background-color: #006eff; 
+    border: 1px solid rgb(0, 25, 136);
+    color: white; 
+    padding: 10px 24px;
+    cursor: pointer; 
+    float: left; 
+
+    position: relative;
+    left: 95vh;
+    bottom: 10vh;
+}
+
+.btn-grupo button:not(:last-child) {
+  border-right: none;
+}
+
+.btn-grupo:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-grupo button:hover {
+  background-color: #2e8d91;
+}
+
+.add{
+    background-color: #035e00; 
+    border: 1px solid green;
+    color: white; 
+    padding: 10px 24px;
+    cursor: pointer; 
+}
+
+.add button:hover {
+    background-color: #777777;
+    color: b;
+}
+
+img{
+    position: relative;
+    top: 1.5vh;
+
+    width: 10vh;
+}
+header{
+    margin: 0;
+    padding: 0;
+
+
+    font-size: 7.5vw;
+    background-color: #03a2ad;
+
+}
+
+body{
+    text-align: center;
+}
+
+    .lista{
+    position: relative;
+    width: 50vh;
+    left: 30vh;
+    border-style: double;
+
+    
+}
+
+h1{
+    position: relative;
+    right: 31vh;
+    bottom: 1vh;
+}
+
+div{
+    position: relative;
+    bottom: 8vh;
+}
+
+
+
+
+
+
+
+body{
+    margin: 0;
+    padding: 0;
+}
