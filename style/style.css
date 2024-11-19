@@ -8,7 +8,7 @@
 
     position: relative;
     left: 95vh;
-    bottom: 8vh;
+    bottom: 5vh;
 }
 
 .btn-grupo button:not(:last-child) {
@@ -61,19 +61,18 @@ body{
     text-align: center;
 }
 
-    .lista{
+.lista{
     position: relative;
     width: 50vh;
-    left: 30vh;
+    left: 35vh;
+    top: 2vh;
     border-style: double;
-
-    
 }
 
 h1{
     position: relative;
-    right: 27vh;
-    bottom: 1.5vh;
+    right: 35vh;
+    bottom: 0.5vh;
 }
 
 div{
@@ -85,9 +84,6 @@ div.at{
     position: relative;
     bottom: 7.5vh;
 }
-
-
-
 
 
 body{
