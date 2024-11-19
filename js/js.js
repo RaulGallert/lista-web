@@ -13,8 +13,9 @@ function mudar(){
 
 function adicionar() {
     const at = document.getElementById("inptxt").value
-    const pr =  document.getElementById("alt").textContent
-
+    const pr = document.getElementById("alt").textContent
+    let x = document.getElementById("lista")
+    let nvli = document.createElement("li")
     if(pr == "Alta"){
         lista.unshift(at)
 
@@ -25,13 +26,10 @@ function adicionar() {
     }else{
         lista.push(at)
     }
-
     for (let i = 0; i < lista.length; i++) {
-        let child = document.createElement('li')
-        child.innerHTML = lista
-        document.getElementById("lista").appendChild(child)
+        let nvlista = document.createTextNode(lista[i]) 
+        nvli.appendChild(nvlista)
     }
-
-    console.log(lista)
+    x.appendChild(nvli)
     
 }

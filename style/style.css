@@ -8,7 +8,7 @@
 
     position: relative;
     left: 95vh;
-    bottom: 5vh;
+    bottom: 9vh;
 }
 
 .btn-grupo button:not(:last-child) {
@@ -47,15 +47,6 @@ img{
 
     width: 10vh;
 }
-header{
-    margin: 0;
-    padding: 0;
-
-
-    font-size: 7.5vw;
-    background-color: #03a2ad;
-
-}
 
 body{
     text-align: center;
@@ -65,11 +56,11 @@ body{
     position: relative;
     width: 50vh;
     left: 35vh;
-    top: 2vh;
+    top: 0.5vh;
     border-style: double;
 }
 
-h1{
+main h1{
     position: relative;
     right: 35vh;
     bottom: 0.5vh;
@@ -85,8 +76,34 @@ div.at{
     bottom: 7.5vh;
 }
 
+footer h1{
+    bottom: 5vh;
+    font-size: 25px;
+}
+
+a:link{
+    color: black;
+}
+
+footer{
+    position:fixed;
+    left:0px;
+    bottom:0px;
+    height:50px;
+    width:100%;
+    background-color: #03a2ad;
+}
 
 body{
     margin: 0;
     padding: 0;
+}
+
+header{
+    margin: 0;
+    padding: 0;
+
+    font-size: 7.5vw;
+    background-color: #03a2ad;
+
 }
