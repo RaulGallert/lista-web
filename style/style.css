@@ -33,14 +33,20 @@ button:not(.alt):hover{
     cursor: pointer; 
 }
 
-.alt{
+select{
     border: 1px solid black;
     padding: 10px 37px;
-    text-size-adjust: fixed;
-    background-color: red;
-    
+    text-size-adjust: fixed;    
 }
-
+.Alta{
+    background-color: red;
+}
+.Media{
+    background-color: yellow;
+}
+.Baixa{
+    background-color: #10a4e3;
+}
 img{
     position: relative;
     top: 1.5vh;
@@ -55,7 +61,7 @@ body{
 .lista{
     position: relative;
     width: 50vh;
-    left: 35vh;
+    left: 60vh;
     top: 0.5vh;
     border-style: double;
 }
@@ -66,7 +72,7 @@ main h1{
     bottom: 0.5vh;
 }
 
-div{
+div:not(.resp){
     position: relative;
     bottom: 8vh;
 }

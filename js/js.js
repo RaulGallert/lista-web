@@ -1,35 +1,36 @@
-const cor = ["red","yellow","#10a4e3"]
-const pr = ["Alta","Media","Baixa"]
 let lista = []
-let cont = 1
-function mudar(){
-    if(cont > 2){
-        cont = 0
-    }
-    document.getElementById("alt").style.backgroundColor = cor[cont];
-    document.getElementById("alt").textContent = pr[cont]
-    cont++
-}
+const button = `<button onclick="Editar"> <i class="fa fa-pencil"></i> Editar</button>
+<button onclick="remover"> <i class="fa fa-ban"></i> Cancelar</button>
+<button onclick=""> <i class="fa fa-check"></i> Confirmar</button>`
 
 function adicionar() {
-    const at = document.getElementById("inptxt").value
+    const at = document.getElementById("inptxt").value.trim()
     const pr = document.getElementById("alt").textContent
-    let x = document.getElementById("lista")
-    let nvli = document.createElement("li")
-    if(pr == "Alta"){
-        lista.unshift(at)
-
-    }else if(pr == "Media"){
-        let a = lista.length/2
-        lista.splice(a , 0,at)
-
-    }else{
-        lista.push(at)
+    const tarefas = document.getElementById("lista")
+    const div = document.createElement("div")
+    if(!at){
+        alert("Por favor, insira um texto.")
+        return;
     }
-    for (let i = 0; i < lista.length; i++) {
-        let nvlista = document.createTextNode(lista[i]) 
-        nvli.appendChild(nvlista)
+    else{
+        if(pr = "Alta"){
+            lista.unshift(at);
+        }
+        else if(pr = "Media"){
+            
+        }
+        else if(pr = "Baixa"){
+            lista.push(at);
+        }
+
     }
-    x.appendChild(nvli)
-    
+}
+
+function remover(){
+        this.remove()
+}
+
+function Editar(){
+    let nome = prompt("Mudar trabalho")
+    this.textContent = nome
 }
