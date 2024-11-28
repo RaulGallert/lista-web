@@ -1,33 +1,50 @@
-let lista = []
-const button = `<button onclick="Editar"> <i class="fa fa-pencil"></i> Editar</button>
-<button onclick="remover"> <i class="fa fa-ban"></i> Cancelar</button>
-<button onclick=""> <i class="fa fa-check"></i> Confirmar</button>`
+const button = `<button onclick="Editar(this)"> <i class="fa fa-pencil"></i> Editar</button>
+<button onclick="remover(this)"> <i class="fa fa-ban"></i> Cancelar</button>
+<button onclick="confirmar(this)"> <i class="fa fa-check"></i> Confirmar</button>`
 
-function adicionar() {
+function adicionar(){
     const at = document.getElementById("inptxt").value.trim()
-    const pr = document.getElementById("alt").textContent
-    const tarefas = document.getElementById("lista")
-    const div = document.createElement("div")
+    const select = document.getElementById("select")
+    const pr = select.value
+    const lista = document.getElementById("lista")
+    const li = document.createElement("li")
+    const cor = nocor(pr)
     if(!at){
         alert("Por favor, insira um texto.")
         return;
     }
     else{
-        if(pr = "Alta"){
-            lista.unshift(at);
-        }
-        else if(pr = "Media"){
-            
-        }
-        else if(pr = "Baixa"){
-            lista.push(at);
-        }
+        
+        let noat = `${at} ${button}`
+        noat.style.backgroundColor = cor
+        li.setAttribute("id",noat)
+        ul.appendChild(li)
 
+
+        
+        at.value = ''
+    }
+}
+
+function nocor(cor) {
+    if(cor == "Alta"){
+        return "#FF474780"
+    }
+    else if(cor == "Media"){
+        return "#FFF94580"
+    }
+    else{
+        return "#3BFFEC94"
     }
 }
 
 function remover(){
         this.remove()
+}
+
+function confirmar() {
+    const del = document.createElement("del")
+    del.appendChild(document.createTextNode(this))
 }
 
 function Editar(){
