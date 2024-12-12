@@ -1,5 +1,27 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    doc,
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-// Seleção de elementos
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyAP_NrF2sM8M2yegQE13ccmpU-7u9RpwwY",
+    authDomain: "todolist-f9100.firebaseapp.com",
+    projectId: "todolist-f9100",
+    storageBucket: "todolist-f9100.firebasestorage.app",
+    messagingSenderId: "987313459512",
+    appId: "1:987313459512:web:e0f262d4f1d20e3de1f1cd",
+    measurementId: "G-2DQG5SYG80"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
@@ -7,15 +29,11 @@ const todoList = document.querySelector("#todo-list");
 const editForm = document.querySelector("#edit-form");
 const editInput = document.querySelector("#edit-input");
 const cancelEditBtn = document.querySelector("#cancel-edit-btn");
-const eraseBtn = document.querySelector("#erase-button");
-const filterBtn = document.querySelector("#filter-select");
-const toolbar = document.querySelector("#toolbar");
 const countStatus = document.querySelector("#countStatus");
 const selectPriority = document.querySelector("#select-priority");
 const editselectPriority = document.querySelector("#select-priority-edit");
 
 let oldInputValue;
-
 
 // Funções Gerais
 
@@ -58,12 +76,11 @@ function verifyTitleTask(task) {
 }
 
 function clearValue() {
-    todoInput.value = ""
+    todoInput.value = "";
     todoInput.focus();
 }
 
-function saveTodo(task, done = 0, save = 1, prioritySelected) {
-
+async function saveTodo(task, done = 0, prioritySelected) {
     if (!verifyTitleTask(task)) {
         const todo = document.createElement("div");
         todo.classList.add("todo");
@@ -96,18 +113,44 @@ function saveTodo(task, done = 0, save = 1, prioritySelected) {
         removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
         todo.appendChild(removeBtn);
 
-        // Utilizando dados do LocalStorage
         if (done) {
             todo.classList.add("done");
         }
-        if (save) {
-            saveTodoLocalStorage({ task: task, done: 0, priority: prioritySelected })
-        }
+
+        // Salvar no Firestore
+        const todoRef = await addDoc(collection(db, "todos"), {
+            title: task,
+            done: done,
+            priority: prioritySelected
+        });
+
+        todo.id = todoRef.id; // Atribui o ID do Firestore ao elemento de tarefa
 
         todoList.appendChild(todo);
+        clearValue();
+        countTodos(); // Atualiza a contagem sempre que uma tarefa for salva
     }
+}
 
-    clearValue();
+async function loadTodos() {
+    const querySnapshot = await getDocs(collection(db, "todos"));
+    querySnapshot.forEach((doc) => {
+        const todoData = doc.data();
+        saveTodo(todoData.title, todoData.done, todoData.priority);
+    });
+}
+
+async function updateTodoInFirestore(todoId, title, priority) {
+    const todoRef = doc(db, "todos", todoId);
+    await updateDoc(todoRef, {
+        title: title,
+        priority: priority
+    });
+}
+
+async function deleteTodoFromFirestore(todoId) {
+    const todoRef = doc(db, "todos", todoId);
+    await deleteDoc(todoRef);
 }
 
 function toggleForms() {
@@ -124,66 +167,16 @@ function updateTodo(text, priority) {
 
         if (todoTitle.innerText === oldInputValue) {
             todoTitle.innerText = text;
-            updateTodoLocalStorage(oldInputValue, text);
             let priorityDiv = todo.querySelector("div[id^='priority-']");
             priorityDiv.id = "";
             addPriority(priority, priorityDiv);
 
+            // Atualiza no Firestore
+            updateTodoInFirestore(todo.id, text, priority);
         }
     });
-}
 
-function getSearchTodos(search) {
-
-    const todos = document.querySelectorAll(".todo");
-
-    todos.forEach((todo) => {
-        let todoTitle = todo.querySelector("h3").innerText.toLowerCase();
-
-        const normalizedSearch = search.toLowerCase();
-
-        todo.style.display = "flex";
-
-        if (!todoTitle.includes(normalizedSearch)) {
-            todo.style.display = "none";
-        }
-    })
-}
-
-function deleteSearch() {
-    searchInput.value = "";
-    searchInput.dispatchEvent(new Event("keyup"));
-}
-
-function filterTodos(filterValue) {
-
-    const todos = document.querySelectorAll(".todo");
-
-    switch (filterValue) {
-        case "all":
-            todos.forEach((todo) => {
-                todo.style.display = "flex";
-            })
-            break;
-
-        case "done":
-            todos.forEach((todo) => {
-                todo.classList.contains("done") ?
-                    (todo.style.display = "flex") :
-                    (todo.style.display = "none");
-            })
-            break;
-
-        case "todo":
-            todos.forEach((todo) => {
-                !todo.classList.contains("done") ?
-                    todo.style.display = "flex" :
-                    todo.style.display = "none";
-            })
-            break;
-        default:
-            break;
-    }
+    countTodos(); // Atualiza a contagem após editar
 }
 
 function countTodos() {
@@ -195,25 +188,24 @@ function countTodos() {
         if (todo.classList.contains("done")) {
             doneTodos++;
         }
-    })
+    });
 
     countStatus.innerText = `Status: ${doneTodos}/${totalTodos}`;
 }
 
 // Eventos
 todoForm.addEventListener("submit", (e) => {
-
     e.preventDefault();
 
     const inputValue = todoInput.value;
 
     if (inputValue) {
-        saveTodo(inputValue);
+        saveTodo(inputValue); // Salva no Firestore
     } else {
         alert("Insira algo no campo!")
     }
-    countTodos();
-})
+    countTodos(); // Atualiza a contagem após adicionar tarefa
+});
 
 document.addEventListener("click", (e) => {
     const targetEl = e.target;
@@ -227,18 +219,30 @@ document.addEventListener("click", (e) => {
     }
 
     if (targetEl.classList.contains("finish-todo")) {
-        parentEl.classList.toggle("done");
-        updateStatusTodoLocalStorage(todoTitle);
+        const doneBtn = parentEl.querySelector(".finish-todo");
+        const editBtn = parentEl.querySelector(".edit-todo");
+        doneBtn.setAttribute("disabled", "");
+        editBtn.setAttribute("disabled", "");
+        doneBtn.setAttribute("class", "realizado");
+        editBtn.setAttribute("class", "realizado");
+
+        parentEl.classList.toggle("done"); // Marca como concluída ou não
+
+        // Atualiza no Firestore
+        updateTodoInFirestore(parentEl.id, todoTitle, todoPriority);
+
+        countTodos(); // Atualiza a contagem após conclusão
     }
 
     if (targetEl.classList.contains("remove-todo")) {
+        // Exclui do Firestore
+        deleteTodoFromFirestore(parentEl.id);
         parentEl.remove();
-        removeTodoLocalStorage(todoTitle);
+        countTodos(); // Atualiza a contagem após remoção
     }
 
     if (targetEl.classList.contains("edit-todo")) {
         toggleForms();
-        toolbar.style.display = "none";
         countStatus.style.display = "none";
         editInput.value = todoTitle;
         if (todoPriority === "Baixa") {
@@ -250,96 +254,27 @@ document.addEventListener("click", (e) => {
         }
         oldInputValue = todoTitle;
     }
-    countTodos();
-    filterTodos(filterBtn.value);
-})
+
+    countTodos(); // Atualiza a contagem após qualquer ação
+});
 
 cancelEditBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    toolbar.style.display = "flex";
     countStatus.style.display = "flex";
     toggleForms();
-})
+});
 
 editForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    toolbar.style.display = "flex";
     countStatus.style.display = "flex";
     const editInputValue = editInput.value;
     const editSelectValue = editselectPriority.value;
-
     if (editInputValue || editSelectValue) {
-        updateTodo(editInputValue, editSelectValue)
+        updateTodo(editInputValue, editSelectValue);
     }
 
     toggleForms();
-})
+});
 
-searchInput.addEventListener("keyup", (e) => {
-
-    const search = e.target.value;
-    getSearchTodos(search);
-})
-
-eraseBtn.addEventListener("click", (e) => {
-
-    e.preventDefault();
-    deleteSearch();
-})
-
-filterBtn.addEventListener("change", (e) => {
-    const filterValue = e.target.value;
-
-    filterTodos(filterValue);
-})
-
-// Funções Local Storage
-
-function getTodosLocalStorage() {
-    const todos = JSON.parse(localStorage.getItem("todos")) || [];
-
-    return todos;
-}
-
-function loadTodosLocalStorage() {
-    const todos = getTodosLocalStorage();
-
-    todos.forEach((todo) => {
-        saveTodo(todo.task, todo.done, 0, todo.priority)
-    })
-}
-
-function saveTodoLocalStorage(todo) {
-    const todos = getTodosLocalStorage();
-
-    todos.push(todo);
-
-    localStorage.setItem("todos", JSON.stringify(todos));
-
-}
-
-function removeTodoLocalStorage(task) {
-    const todos = getTodosLocalStorage();
-
-    const filteredTodos = todos.filter((todo) => todo.task !== task)
-
-    localStorage.setItem("todos", JSON.stringify(filteredTodos));
-}
-
-function updateStatusTodoLocalStorage(task) {
-    const todos = getTodosLocalStorage();
-
-    todos.map((todo) => todo.task === task ? (todo.done = !todo.done) : null);
-
-    localStorage.setItem("todos", JSON.stringify(todos));
-}
-
-function updateTodoLocalStorage(todoOldTask, todoNewTask) {
-    const todos = getTodosLocalStorage();
-
-    todos.map((todo) => todo.task === todoOldTask ? (todo.task = todoNewTask) : null);
-
-    localStorage.setItem("todos", JSON.stringify(todos));
-}
-
-loadTodosLocalStorage();
+// Carregar tarefas ao iniciar a página
+loadTodos();

@@ -31,6 +31,7 @@ button {
     transition: 0.4s;
 }
 
+
 button:hover {
     background-color: #102F5e;
     color: #fff;
@@ -38,6 +39,12 @@ button:hover {
 
 button:hover>i {
     color: #fff;
+}
+
+.realizado{
+    background-color: #545d69;
+    color: #000;
+    pointer-events: none;
 }
 
 button i {
@@ -60,19 +67,23 @@ select {
     color: #102f5e;
 }
 
-.todo-container {
-    max-width: 450px;
-    margin: 3rem auto;
-    background-color: #fdfdfd;
-    padding: 1.5rem;
-    border-radius: 15px;
-    box-shadow: 5px 5px 10px #888888;
-}
 
 .todo-container header {
+    height: 105px;
     text-align: center;
     padding: 0 1rem 1rem;
     border-bottom: 0.1rem solid #14213d;
+}
+
+header h1{
+    position: absolute;
+    right: 45vw;
+    top: 25px;
+}
+
+img{
+    position: absolute;
+    right: 55vw;
 }
 
 #todo-form,
@@ -205,9 +216,10 @@ select {
     overflow-wrap: anywhere;
 }
 
-.todo button {
+.todo button{
     margin-left: 0.4rem;
 }
+
 
 .done {
     background-color: #395169;
