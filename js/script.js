@@ -80,63 +80,67 @@ function clearValue() {
     todoInput.focus();
 }
 
-async function saveTodo(task, done = 0, prioritySelected) {
-    if (!verifyTitleTask(task)) {
-        const todo = document.createElement("div");
-        todo.classList.add("todo");
+async function saveTodo(task, done = 0, prioritySelected, isFromFirestore = false) {
+    // Verifica se a tarefa já existe se não for uma tarefa carregada do Firestore
+    if (!isFromFirestore && verifyTitleTask(task)) {
+        return;
+    }
 
-        const todoTitle = document.createElement("h3");
-        todoTitle.innerHTML = task;
-        todo.appendChild(todoTitle);
+    const todo = document.createElement("div");
+    todo.classList.add("todo");
 
-        if (!prioritySelected) {
-            prioritySelected = selectPriority.value;
-        }
+    const todoTitle = document.createElement("h3");
+    todoTitle.innerHTML = task;
+    todo.appendChild(todoTitle);
 
-        let priority = document.createElement("div");
-        priority = addPriority(prioritySelected, priority);
+    if (!prioritySelected) {
+        prioritySelected = selectPriority.value;
+    }
 
-        todo.appendChild(priority);
+    let priority = document.createElement("div");
+    priority = addPriority(prioritySelected, priority);
 
-        const doneBtn = document.createElement("button");
-        doneBtn.classList.add("finish-todo");
-        doneBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
-        todo.appendChild(doneBtn);
+    todo.appendChild(priority);
 
-        const editBtn = document.createElement("button");
-        editBtn.classList.add("edit-todo");
-        editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>';
-        todo.appendChild(editBtn);
+    const doneBtn = document.createElement("button");
+    doneBtn.classList.add("finish-todo");
+    doneBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+    todo.appendChild(doneBtn);
 
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("remove-todo");
-        removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-        todo.appendChild(removeBtn);
+    const editBtn = document.createElement("button");
+    editBtn.classList.add("edit-todo");
+    editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>';
+    todo.appendChild(editBtn);
 
-        if (done) {
-            todo.classList.add("done");
-        }
+    const removeBtn = document.createElement("button");
+    removeBtn.classList.add("remove-todo");
+    removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    todo.appendChild(removeBtn);
 
-        // Salvar no Firestore
+    if (done) {
+        todo.classList.add("done");
+    }
+
+    // Salvar no Firestore, mas só se não for carregado do Firestore
+    if (!isFromFirestore) {
         const todoRef = await addDoc(collection(db, "todos"), {
             title: task,
             done: done,
             priority: prioritySelected
         });
-
         todo.id = todoRef.id; // Atribui o ID do Firestore ao elemento de tarefa
-
-        todoList.appendChild(todo);
-        clearValue();
-        countTodos(); // Atualiza a contagem sempre que uma tarefa for salva
     }
+
+    todoList.appendChild(todo);
+    clearValue();
+    countTodos(); // Atualiza a contagem sempre que uma tarefa for salva
 }
 
 async function loadTodos() {
     const querySnapshot = await getDocs(collection(db, "todos"));
     querySnapshot.forEach((doc) => {
         const todoData = doc.data();
-        saveTodo(todoData.title, todoData.done, todoData.priority);
+        saveTodo(todoData.title, todoData.done, todoData.priority, true); // Passa `true` para não salvar novamente
     });
 }
 
